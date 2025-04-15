@@ -14,89 +14,121 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  TooltipProps,
   ResponsiveContainer,
   Legend,
-  PieChart,
-  Pie,
-  Cell,
   FunnelChart,
   Funnel,
   LabelList,
   LineChart,
   Line,
+  Cell,
 } from "recharts";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
-  ArrowUpRight,
-  ArrowDownRight,
-  Zap,
   Globe,
   Users,
   MousePointerClick,
   ShoppingCart,
-  ExternalLink,
   TrendingUp,
   Activity,
   BarChart3,
   PieChart as PieChartIcon,
   ArrowRight,
+  Zap,
 } from "lucide-react";
-import {
-  trafficSourcesData,
-  conversionFunnelData,
-  campaignPerformanceData,
-} from "@/data/dashboardData";
 
-// Define types for the funnel chart data
+// Mock data
+const trafficSourcesData = [
+  {
+    source: "Organic Search",
+    visitors: 28456,
+    conversionRate: 3.2,
+    revenue: 58950,
+  },
+  { source: "Direct", visitors: 19854, conversionRate: 4.5, revenue: 42385 },
+  { source: "Social", visitors: 15120, conversionRate: 2.8, revenue: 31240 },
+  { source: "Email", visitors: 8623, conversionRate: 5.7, revenue: 39710 },
+  { source: "Referral", visitors: 6942, conversionRate: 4.2, revenue: 23109 },
+  {
+    source: "Paid Search",
+    visitors: 15205,
+    conversionRate: 3.8,
+    revenue: 20000,
+  },
+];
+
+const conversionFunnelData = [
+  { stage: "Visitors", value: 85911, percentage: 100 },
+  { stage: "Product Views", value: 54812, percentage: 63.8 },
+  { stage: "Add to Cart", value: 18324, percentage: 21.3 },
+  { stage: "Checkout", value: 9880, percentage: 11.5 },
+  { stage: "Purchases", value: 6272, percentage: 7.3 },
+];
+
+const campaignPerformanceData = [
+  {
+    name: "Summer Collection",
+    convRate: 6.2,
+    ctr: 3.8,
+    roas: 6.2,
+    revenue: 42386,
+  },
+  { name: "Flash Sale", convRate: 7.8, ctr: 5.2, roas: 7.8, revenue: 38942 },
+  {
+    name: "Holiday Special",
+    convRate: 4.3,
+    ctr: 2.9,
+    roas: 5.5,
+    revenue: 31785,
+  },
+  { name: "New Arrivals", convRate: 3.1, ctr: 2.2, roas: 4.1, revenue: 21543 },
+  {
+    name: "Loyalty Program",
+    convRate: 8.4,
+    ctr: 4.1,
+    roas: 9.2,
+    revenue: 19876,
+  },
+];
+
+// Define funnel data type
 interface FunnelData {
   stage: string;
   value: number;
   percentage: number;
 }
 
-// Reusable glass-style tooltip with more green tones
-const glassStyle = {
-  backgroundColor: "rgba(17, 24, 39, 0.75)",
-  borderRadius: "0.5rem",
-  border: "1px solid rgba(16, 185, 129, 0.3)",
-  backdropFilter: "blur(8px)",
-  boxShadow: "0 10px 25px -5px rgba(16, 185, 129, 0.2)",
-  color: "#fff",
-  padding: "12px 16px",
-};
-
-// Updated color palette with vibrant punchy colors for charts
+// Improved color palette with professional, visually pleasing colors
 const COLORS = [
+  "#6366f1", // Indigo
   "#8b5cf6", // Violet
   "#ec4899", // Pink
-  "#f59e0b", // Amber
-  "#06b6d4", // Cyan
+  "#0ea5e9", // Sky blue
   "#10b981", // Emerald
-  "#ef4444", // Red
+  "#f59e0b", // Amber
 ];
 
-const TrafficAcquisitionInsights = () => {
+const ImprovedTrafficAcquisitionInsights = () => {
   // Format numbers with commas
-  const formatNumber = (num: number): string => {
+  const formatNumber = (num) => {
     return new Intl.NumberFormat().format(num);
   };
 
+  // Improved glass-style tooltip with better readability
+  const glassStyle = {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: "0.5rem",
+    border: "1px solid rgba(148, 163, 184, 0.2)",
+    backdropFilter: "blur(8px)",
+    boxShadow: "0 10px 25px -5px rgba(15, 23, 42, 0.1)",
+    color: "#1e293b",
+    padding: "12px 16px",
+  };
+
   // Custom tooltip for the funnel chart
-  const CustomFunnelTooltip = ({
-    active,
-    payload,
-  }: TooltipProps<number, string>) => {
+  const CustomFunnelTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload as FunnelData;
+      const data = payload[0].payload;
       return (
         <div style={glassStyle}>
           <p className="font-semibold mb-1">{data.stage}</p>
@@ -111,13 +143,6 @@ const TrafficAcquisitionInsights = () => {
       );
     }
     return null;
-  };
-
-  // Format the time on site (seconds to mm:ss)
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   // Calculate total metrics
@@ -135,60 +160,60 @@ const TrafficAcquisitionInsights = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-screen">
       <div className="flex items-center gap-2">
-        <Globe className="h-5 w-5 text-emerald-500" />
-        <h2 className="text-xl font-semibold terminal-text">
+        <Globe className="h-5 w-5 text-indigo-500" />
+        <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
           Traffic & Acquisition Insights
         </h2>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20">
+        <Card className="bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardContent className="p-6">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   Total Visitors
                 </p>
-                <h3 className="text-2xl font-bold mt-1 terminal-text">
+                <h3 className="text-2xl font-bold mt-1 text-slate-800 dark:text-slate-100">
                   {formatNumber(totalVisitors)}
                 </h3>
               </div>
-              <Users className="h-5 w-5 text-emerald-500" />
+              <Users className="h-5 w-5 text-indigo-500" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20">
+        <Card className="bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardContent className="p-6">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   Avg. Conversion Rate
                 </p>
-                <h3 className="text-2xl font-bold mt-1 terminal-text">
+                <h3 className="text-2xl font-bold mt-1 text-slate-800 dark:text-slate-100">
                   {avgConversionRate}%
                 </h3>
               </div>
-              <MousePointerClick className="h-5 w-5 text-emerald-500" />
+              <MousePointerClick className="h-5 w-5 text-indigo-500" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20">
+        <Card className="bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardContent className="p-6">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                   Total Revenue
                 </p>
-                <h3 className="text-2xl font-bold mt-1 terminal-text">
+                <h3 className="text-2xl font-bold mt-1 text-slate-800 dark:text-slate-100">
                   ${formatNumber(totalRevenue)}
                 </h3>
               </div>
-              <ShoppingCart className="h-5 w-5 text-emerald-500" />
+              <ShoppingCart className="h-5 w-5 text-indigo-500" />
             </div>
           </CardContent>
         </Card>
@@ -197,13 +222,13 @@ const TrafficAcquisitionInsights = () => {
       {/* Bento Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Traffic Sources Chart - Spans 2 columns on large screens */}
-        <Card className="col-span-1 lg:col-span-2 bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20 transition-all hover:shadow-md hover:shadow-emerald-700/10">
+        <Card className="col-span-1 lg:col-span-2 bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-lg flex items-center gap-2 text-slate-800 dark:text-slate-100">
+              <BarChart3 className="h-4 w-4 text-indigo-500" />
               Traffic Sources
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
               Visitors and conversion rates by source
             </CardDescription>
           </CardHeader>
@@ -211,21 +236,20 @@ const TrafficAcquisitionInsights = () => {
             <div className="h-80 overflow-x-auto">
               <ResponsiveContainer width="100%" height="100%" minWidth={600}>
                 <BarChart
-                  accessibilityLayer
                   data={trafficSourcesData}
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                   barGap={8}
                 >
                   <CartesianGrid
                     vertical={false}
-                    stroke="rgba(255,255,255,0.1)"
+                    stroke="rgba(148, 163, 184, 0.2)"
                   />
                   <XAxis
                     dataKey="source"
                     tick={{ fontSize: 12 }}
                     tickLine={false}
                     tickMargin={10}
-                    axisLine={{ stroke: "rgba(255,255,255,0.15)" }}
+                    axisLine={{ stroke: "rgba(148, 163, 184, 0.3)" }}
                   />
                   <YAxis
                     yAxisId="left"
@@ -233,7 +257,7 @@ const TrafficAcquisitionInsights = () => {
                     tickFormatter={(value) => formatNumber(value)}
                     tick={{ fontSize: 12 }}
                     tickLine={false}
-                    axisLine={{ stroke: "rgba(255,255,255,0.15)" }}
+                    axisLine={{ stroke: "rgba(148, 163, 184, 0.3)" }}
                   />
                   <YAxis
                     yAxisId="right"
@@ -241,14 +265,14 @@ const TrafficAcquisitionInsights = () => {
                     tickFormatter={(value) => `${value}%`}
                     tick={{ fontSize: 12 }}
                     tickLine={false}
-                    axisLine={{ stroke: "rgba(255,255,255,0.15)" }}
+                    axisLine={{ stroke: "rgba(148, 163, 184, 0.3)" }}
                   />
                   <Tooltip
-                    cursor={false}
+                    cursor={{ fill: "rgba(148, 163, 184, 0.1)" }}
                     contentStyle={glassStyle}
                     formatter={(value, name) => {
                       if (name === "visitors")
-                        return [formatNumber(value as number), "Visitors"];
+                        return [formatNumber(value), "Visitors"];
                       if (name === "conversionRate")
                         return [`${value}%`, "Conversion Rate"];
                       return [value, name];
@@ -263,10 +287,10 @@ const TrafficAcquisitionInsights = () => {
                       x2="0"
                       y2="1"
                     >
-                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.9} />
+                      <stop offset="0%" stopColor="#6366f1" stopOpacity={0.9} />
                       <stop
                         offset="100%"
-                        stopColor="#8b5cf6"
+                        stopColor="#6366f1"
                         stopOpacity={0.4}
                       />
                     </linearGradient>
@@ -277,10 +301,10 @@ const TrafficAcquisitionInsights = () => {
                       x2="0"
                       y2="1"
                     >
-                      <stop offset="0%" stopColor="#ec4899" stopOpacity={0.9} />
+                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.9} />
                       <stop
                         offset="100%"
-                        stopColor="#ec4899"
+                        stopColor="#8b5cf6"
                         stopOpacity={0.4}
                       />
                     </linearGradient>
@@ -309,7 +333,7 @@ const TrafficAcquisitionInsights = () => {
           <CardFooter className="pt-0 flex justify-end">
             <Badge
               variant="outline"
-              className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              className="bg-indigo-100 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-300"
             >
               <BarChart3 className="mr-1 h-3 w-3" />
               Traffic Analysis
@@ -318,13 +342,13 @@ const TrafficAcquisitionInsights = () => {
         </Card>
 
         {/* Conversion Funnel */}
-        <Card className="col-span-1 row-span-2 bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20 transition-all hover:shadow-md hover:shadow-emerald-700/10">
+        <Card className="col-span-1 row-span-2 bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Activity className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-lg flex items-center gap-2 text-slate-800 dark:text-slate-100">
+              <Activity className="h-4 w-4 text-indigo-500" />
               Conversion Funnel
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
               User journey from visit to purchase
             </CardDescription>
           </CardHeader>
@@ -335,26 +359,31 @@ const TrafficAcquisitionInsights = () => {
                   <Tooltip content={<CustomFunnelTooltip />} />
                   <Funnel
                     dataKey="value"
-                    data={conversionFunnelData as FunnelData[]}
+                    data={conversionFunnelData}
                     isAnimationActive
                     animationDuration={1500}
                   >
                     <LabelList
                       position="right"
-                      fill="#fff"
+                      fill="#1e293b"
                       stroke="none"
                       dataKey="stage"
+                      fontSize={12}
+                      fontWeight="bold"
                     />
                     <LabelList
                       position="left"
-                      fill="#fff"
+                      fill="#1e293b"
                       stroke="none"
-                      dataKey={(entry: FunnelData) => `${entry.percentage}%`}
+                      dataKey={(entry) => `${entry.percentage}%`}
+                      fontSize={12}
+                      fontWeight="bold"
                     />
                     {conversionFunnelData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
+                        opacity={0.9}
                       />
                     ))}
                   </Funnel>
@@ -363,36 +392,33 @@ const TrafficAcquisitionInsights = () => {
             </div>
 
             <div className="space-y-3">
-              {conversionFunnelData.slice(0, 3).map((item, index) => {
-                // Calculate drop-off from previous stage
-                const prevPercentage =
-                  index > 0 ? conversionFunnelData[index - 1].percentage : 100;
-                const dropOff = prevPercentage - item.percentage;
-
-                return (
-                  <div key={index} className="mb-1">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs font-medium">{item.stage}</span>
-                      <span className="text-xs">{item.percentage}%</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
-                      <div
-                        className="h-full rounded-full"
-                        style={{
-                          width: `${item.percentage}%`,
-                          backgroundColor: COLORS[index % COLORS.length],
-                        }}
-                      ></div>
-                    </div>
+              {conversionFunnelData.slice(0, 3).map((item, index) => (
+                <div key={index} className="mb-1">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                      {item.stage}
+                    </span>
+                    <span className="text-xs text-slate-600 dark:text-slate-400">
+                      {item.percentage}%
+                    </span>
                   </div>
-                );
-              })}
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${item.percentage}%`,
+                        backgroundColor: COLORS[index % COLORS.length],
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
           <CardFooter className="pt-0 flex justify-end">
             <Badge
               variant="outline"
-              className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              className="bg-indigo-100 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-300"
             >
               <ArrowRight className="mr-1 h-3 w-3" />
               User Journey
@@ -401,13 +427,15 @@ const TrafficAcquisitionInsights = () => {
         </Card>
 
         {/* Top Traffic Sources Table */}
-        <Card className="col-span-1 bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20 transition-all hover:shadow-md hover:shadow-emerald-700/10">
+        <Card className="col-span-1 bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Globe className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-lg flex items-center gap-2 text-slate-800 dark:text-slate-100">
+              <Globe className="h-4 w-4 text-indigo-500" />
               Top Sources
             </CardTitle>
-            <CardDescription>Performance by traffic source</CardDescription>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Performance by traffic source
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -418,13 +446,15 @@ const TrafficAcquisitionInsights = () => {
                       className="w-2 h-2 rounded-full mr-2"
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     ></div>
-                    <span className="text-sm font-medium">{item.source}</span>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                      {item.source}
+                    </span>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-bold">
+                    <div className="text-sm font-bold text-slate-800 dark:text-slate-100">
                       {formatNumber(item.visitors)}
                     </div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
                       {item.conversionRate}% Conv.
                     </div>
                   </div>
@@ -432,11 +462,13 @@ const TrafficAcquisitionInsights = () => {
               ))}
             </div>
           </CardContent>
-          <CardFooter className="pt-0 border-t border-emerald-800/10 flex justify-between items-center text-sm">
-            <span className="text-muted-foreground">View all sources</span>
+          <CardFooter className="pt-0 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-sm">
+            <span className="text-slate-500 dark:text-slate-400">
+              View all sources
+            </span>
             <Badge
               variant="outline"
-              className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              className="bg-indigo-100 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-300"
             >
               {trafficSourcesData.length} sources
             </Badge>
@@ -444,13 +476,13 @@ const TrafficAcquisitionInsights = () => {
         </Card>
 
         {/* Top Campaigns Table */}
-        <Card className="col-span-1 bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20 transition-all hover:shadow-md hover:shadow-emerald-700/10">
+        <Card className="col-span-1 bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <PieChartIcon className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-lg flex items-center gap-2 text-slate-800 dark:text-slate-100">
+              <PieChartIcon className="h-4 w-4 text-indigo-500" />
               Top Campaigns
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
               Best performing marketing campaigns
             </CardDescription>
           </CardHeader>
@@ -466,27 +498,33 @@ const TrafficAcquisitionInsights = () => {
                           backgroundColor: COLORS[index % COLORS.length],
                         }}
                       ></div>
-                      <span className="text-sm font-medium truncate">
+                      <span className="text-sm font-medium truncate text-slate-700 dark:text-slate-300">
                         {item.name}
                       </span>
                     </div>
-                    <div className="text-xs text-muted-foreground ml-4">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 ml-4">
                       ${formatNumber(item.revenue)} revenue
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-bold">{item.roas}x</div>
-                    <div className="text-xs text-muted-foreground">ROAS</div>
+                    <div className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                      {item.roas}x
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                      ROAS
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </CardContent>
-          <CardFooter className="pt-0 border-t border-emerald-800/10 flex justify-between items-center text-sm">
-            <span className="text-muted-foreground">View all campaigns</span>
+          <CardFooter className="pt-0 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-sm">
+            <span className="text-slate-500 dark:text-slate-400">
+              View all campaigns
+            </span>
             <Badge
               variant="outline"
-              className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              className="bg-indigo-100 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-300"
             >
               {campaignPerformanceData.length} campaigns
             </Badge>
@@ -494,13 +532,13 @@ const TrafficAcquisitionInsights = () => {
         </Card>
 
         {/* Campaign Performance Chart */}
-        <Card className="col-span-1 lg:col-span-2 bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20 transition-all hover:shadow-md hover:shadow-emerald-700/10">
+        <Card className="col-span-1 lg:col-span-2 bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-lg flex items-center gap-2 text-slate-800 dark:text-slate-100">
+              <TrendingUp className="h-4 w-4 text-indigo-500" />
               Campaign Performance
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
               Conversion rates and ROAS by campaign
             </CardDescription>
           </CardHeader>
@@ -511,60 +549,16 @@ const TrafficAcquisitionInsights = () => {
                   data={campaignPerformanceData}
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
-                  <defs>
-                    <linearGradient
-                      id="lineGradient1"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.8} />
-                      <stop
-                        offset="100%"
-                        stopColor="#8b5cf6"
-                        stopOpacity={0.3}
-                      />
-                    </linearGradient>
-                    <linearGradient
-                      id="lineGradient2"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="0%" stopColor="#ec4899" stopOpacity={0.8} />
-                      <stop
-                        offset="100%"
-                        stopColor="#ec4899"
-                        stopOpacity={0.3}
-                      />
-                    </linearGradient>
-                    <linearGradient
-                      id="lineGradient3"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.8} />
-                      <stop
-                        offset="100%"
-                        stopColor="#f59e0b"
-                        stopOpacity={0.3}
-                      />
-                    </linearGradient>
-                  </defs>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     vertical={false}
-                    stroke="rgba(255,255,255,0.1)"
+                    stroke="rgba(148, 163, 184, 0.2)"
                   />
                   <XAxis
                     dataKey="name"
                     tick={{ fontSize: 12 }}
                     tickLine={false}
-                    axisLine={{ stroke: "rgba(255,255,255,0.15)" }}
+                    axisLine={{ stroke: "rgba(148, 163, 184, 0.3)" }}
                   />
                   <YAxis
                     yAxisId="left"
@@ -572,14 +566,14 @@ const TrafficAcquisitionInsights = () => {
                     tickFormatter={(value) => `${value}%`}
                     tick={{ fontSize: 12 }}
                     tickLine={false}
-                    axisLine={{ stroke: "rgba(255,255,255,0.15)" }}
+                    axisLine={{ stroke: "rgba(148, 163, 184, 0.3)" }}
                   />
                   <YAxis
                     yAxisId="right"
                     orientation="right"
                     tick={{ fontSize: 12 }}
                     tickLine={false}
-                    axisLine={{ stroke: "rgba(255,255,255,0.15)" }}
+                    axisLine={{ stroke: "rgba(148, 163, 184, 0.3)" }}
                   />
                   <Tooltip
                     contentStyle={glassStyle}
@@ -601,10 +595,10 @@ const TrafficAcquisitionInsights = () => {
                     type="monotone"
                     dataKey="convRate"
                     name="Conversion Rate"
-                    stroke="#8b5cf6"
+                    stroke="#6366f1"
                     strokeWidth={2}
-                    dot={{ r: 4, strokeWidth: 2, fill: "#8b5cf6" }}
-                    activeDot={{ r: 6, strokeWidth: 2, fill: "#8b5cf6" }}
+                    dot={{ r: 4, strokeWidth: 2, fill: "#6366f1" }}
+                    activeDot={{ r: 6, strokeWidth: 2, fill: "#6366f1" }}
                     animationDuration={1500}
                   />
                   <Line
@@ -612,10 +606,10 @@ const TrafficAcquisitionInsights = () => {
                     type="monotone"
                     dataKey="ctr"
                     name="Click-through Rate"
-                    stroke="#ec4899"
+                    stroke="#8b5cf6"
                     strokeWidth={2}
-                    dot={{ r: 4, strokeWidth: 2, fill: "#ec4899" }}
-                    activeDot={{ r: 6, strokeWidth: 2, fill: "#ec4899" }}
+                    dot={{ r: 4, strokeWidth: 2, fill: "#8b5cf6" }}
+                    activeDot={{ r: 6, strokeWidth: 2, fill: "#8b5cf6" }}
                     animationDuration={1500}
                     animationBegin={300}
                   />
@@ -624,10 +618,10 @@ const TrafficAcquisitionInsights = () => {
                     type="monotone"
                     dataKey="roas"
                     name="ROAS"
-                    stroke="#f59e0b"
+                    stroke="#10b981"
                     strokeWidth={2}
-                    dot={{ r: 4, strokeWidth: 2, fill: "#f59e0b" }}
-                    activeDot={{ r: 6, strokeWidth: 2, fill: "#f59e0b" }}
+                    dot={{ r: 4, strokeWidth: 2, fill: "#10b981" }}
+                    activeDot={{ r: 6, strokeWidth: 2, fill: "#10b981" }}
                     animationDuration={1500}
                     animationBegin={600}
                   />
@@ -638,7 +632,7 @@ const TrafficAcquisitionInsights = () => {
           <CardFooter className="pt-0 flex justify-end">
             <Badge
               variant="outline"
-              className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              className="bg-indigo-100 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-300"
             >
               <TrendingUp className="mr-1 h-3 w-3" />
               Campaign Metrics
@@ -647,55 +641,59 @@ const TrafficAcquisitionInsights = () => {
         </Card>
 
         {/* Conversion Opportunities */}
-        <Card className="col-span-1 bg-emerald-800/5 backdrop-blur-sm border-emerald-700/20 transition-all hover:shadow-md hover:shadow-emerald-700/10">
+        <Card className="col-span-1 bg-white dark:bg-slate-800 border-0 shadow-sm hover:shadow-md transition-all">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Zap className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-lg flex items-center gap-2 text-slate-800 dark:text-slate-100">
+              <Zap className="h-4 w-4 text-indigo-500" />
               Conversion Opportunities
             </CardTitle>
-            <CardDescription>Areas to improve conversion</CardDescription>
+            <CardDescription className="text-slate-500 dark:text-slate-400">
+              Areas to improve conversion
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h4 className="text-sm font-medium mb-1 flex items-center">
-                  <Badge className="mr-2 bg-amber-500/80">1</Badge>
+                <h4 className="text-sm font-medium mb-1 flex items-center text-slate-700 dark:text-slate-300">
+                  <Badge className="mr-2 bg-indigo-500">1</Badge>
                   Cart Abandonment
                 </h4>
-                <p className="text-xs text-muted-foreground">
-                  {(
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {formatNumber(
                     conversionFunnelData[2].value -
-                    conversionFunnelData[3].value
-                  ).toLocaleString()}{" "}
+                      conversionFunnelData[3].value
+                  )}{" "}
                   visitors abandoned their cart
                 </p>
-                <div className="mt-1 text-xs text-emerald-500">
+                <div className="mt-1 text-xs text-indigo-500">
                   Consider email reminders and checkout optimization
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-medium mb-1 flex items-center">
-                  <Badge className="mr-2 bg-amber-500/80">2</Badge>
+                <h4 className="text-sm font-medium mb-1 flex items-center text-slate-700 dark:text-slate-300">
+                  <Badge className="mr-2 bg-indigo-500">2</Badge>
                   Checkout Drop-offs
                 </h4>
-                <p className="text-xs text-muted-foreground">
-                  {(
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {formatNumber(
                     conversionFunnelData[3].value -
-                    conversionFunnelData[4].value
-                  ).toLocaleString()}{" "}
+                      conversionFunnelData[4].value
+                  )}{" "}
                   visitors left during checkout
                 </p>
-                <div className="mt-1 text-xs text-emerald-500">
+                <div className="mt-1 text-xs text-indigo-500">
                   Review payment options and simplify the process
                 </div>
               </div>
             </div>
           </CardContent>
-          <CardFooter className="pt-0 border-t border-emerald-800/10 flex justify-between items-center text-sm">
-            <span className="text-muted-foreground">View full report</span>
+          <CardFooter className="pt-0 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-sm">
+            <span className="text-slate-500 dark:text-slate-400">
+              View full report
+            </span>
             <Badge
               variant="outline"
-              className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+              className="bg-indigo-100 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-300"
             >
               2 opportunities
             </Badge>
@@ -706,4 +704,4 @@ const TrafficAcquisitionInsights = () => {
   );
 };
 
-export default TrafficAcquisitionInsights;
+export default ImprovedTrafficAcquisitionInsights;
