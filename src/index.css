@@ -1,0 +1,278 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Premium Light Mode - Sophisticated Color Palette */
+    --background: 210 40% 98%;
+    --foreground: 224 71% 4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    /* Vibrant violet-blue primary with perfect contrast and visual interest */
+    --primary: 245 72% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Refined secondary for subtle accents */
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 224 57% 20%;
+
+    /* Sophisticated muted tones */
+    --muted: 214 32% 91%;
+    --muted-foreground: 220 25% 41%;
+
+    /* Subtle accent that enhances the primary */
+    --accent: 245 30% 94%;
+    --accent-foreground: 245 60% 25%;
+
+    /* Clear signaling colors with optimal visibility */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 35 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Refined borders and interaction states */
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 245 72% 58%;
+
+    --radius: 0.5rem;
+
+    /* Premium sidebar with proper contrast */
+    --sidebar-background: 246 50% 16%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 245 72% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 246 45% 22%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 246 45% 24%;
+    --sidebar-ring: 245 72% 65%;
+  }
+
+  /* Dark mode preserved as fallback, but not used by default */
+  .dark {
+    --background: 232 32% 12%;
+    --foreground: 220 40% 98%;
+
+    --card: 232 36% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 232 36% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 245 72% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 232 26% 24%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 232 26% 24%;
+    --muted-foreground: 220 20% 76%;
+
+    --accent: 232 24% 20%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 35 92% 50%;
+    --warning-foreground: 210 40% 98%;
+
+    --border: 232 25% 24%;
+    --input: 232 25% 24%;
+    --ring: 245 72% 65%;
+
+    --sidebar-background: 232 48% 10%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 245 72% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 232 36% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 232 30% 18%;
+    --sidebar-ring: 245 72% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Premium content display with subtle effects */
+  .terminal-text {
+    font-family: "SF Mono", "Roboto Mono", monospace;
+    color: hsl(245, 72%, 58%);
+    text-shadow: 0 0 2px rgba(108, 85, 250, 0.4);
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+  }
+
+  .terminal-text:hover {
+    text-shadow: 0 0 4px rgba(108, 85, 250, 0.6);
+  }
+
+  /* Elegant data visualization effect */
+  .data-flow {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .data-flow:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .data-flow::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(108, 85, 250, 0) 0%,
+      rgba(108, 85, 250, 0.02) 85%,
+      rgba(108, 85, 250, 0.04) 100%
+    );
+    z-index: 0;
+    pointer-events: none;
+    animation: subtle-pulse 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes subtle-pulse {
+    0% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Premium interactive elements */
+  .interactive-element {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .interactive-element:hover {
+    box-shadow: 0 4px 12px rgba(108, 85, 250, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .interactive-element:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(108, 85, 250, 0.1);
+  }
+
+  .interactive-element::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: hsl(var(--primary));
+    transition: width 0.3s ease;
+  }
+
+  .interactive-element:hover::after {
+    width: 100%;
+  }
+
+  /* Sophisticated visual effects */
+  .card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Professional data visualization elements */
+  .chart-grid line {
+    stroke: hsl(var(--border));
+    stroke-opacity: 0.5;
+    stroke-dasharray: 4 4;
+  }
+
+  .chart-tooltip {
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+  }
+
+  /* Modern status indicators */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1;
+    letter-spacing: 0.025em;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .status-badge.success {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: hsl(142, 76%, 36%);
+  }
+
+  .status-badge.warning {
+    background-color: rgba(255, 170, 0, 0.1);
+    color: hsl(35, 92%, 50%);
+  }
+
+  .status-badge.error {
+    background-color: rgba(244, 63, 94, 0.1);
+    color: hsl(0, 72%, 51%);
+  }
+
+  .status-badge.info {
+    background-color: rgba(108, 85, 250, 0.1);
+    color: hsl(245, 72%, 58%);
+  }
+
+  /* Premium scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(214, 20%, 90%);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(214, 20%, 80%);
+  }
+}
